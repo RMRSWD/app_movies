@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:app_movies/film.dart';
 
 Future<List<Film>> fetchFilms(String query) async {
-  const apiKey = 'd569dcea3c12b769842598f44540a7f2';
+  const apiKey = 'd569dcea3c122598f44540a7f2';
   const url = 'https://api.themoviedb.org/3/search/movie?query=$query&api_key=$apiKey';
 
   final response = await http.get(Uri.parse(url));
@@ -66,5 +66,21 @@ Future<List<String>> fetchCredits(String movieId) async {
     return castList.take(5).map((actor) => actor['name'] as String).toList();
   } else {
     throw Exception('Échec du chargement des crédits pour le film $movieId');
+  }
+}
+
+Future<List<Film>> fetchRecommendations(String movieId) async {
+  final url = 'https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=$apiKey&language=en-US';
+
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> jsonData = json.decode(response.body);
+    final List<dynamic> results = jsonData['results'];
+
+    // Transforme chaque élément de `results` en un objet `Film` et retourne la liste
+    return results.map((item) => Film.fromJson(item)).toList();
+  } else {
+    throw Exception('Échec du chargement des recommandations pour le film $movieId');
   }
 }

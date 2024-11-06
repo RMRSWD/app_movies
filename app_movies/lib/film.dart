@@ -7,7 +7,7 @@ class Film {
   final double rating;
   final String posterPath;
   final List<String> genres;
-  late final List<String> actors;
+  List<String> actors;
   bool isFavorite;
   double? userRating; // Note personnelle de l'utilisateur (non-final)
   final String mediaType; // "movie" ou "tv"
@@ -21,7 +21,7 @@ class Film {
     required this.rating,
     required this.posterPath,
     required this.genres,
-    required this.actors,
+    this.actors = const [],
     this.isFavorite = false,
     this.userRating,
     required this.mediaType,
@@ -40,9 +40,9 @@ class Film {
               ?.map((genre) => genre['name'] as String)
               .toList() ??
           [],
-      actors: (json['credits']['cast'] as List<dynamic>?)
-              ?.take(5)
-              .map((actor) => actor['name'] as String)
+      actors: (json['credits']?['cast'] as List<dynamic>?)
+              ?.map((actor) => actor['name'] as String)
+              .take(5)
               .toList() ??
           [], // Limite à 5 acteurs principaux
       mediaType: json['media_type'] ?? 'movie',

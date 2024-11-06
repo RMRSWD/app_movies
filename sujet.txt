@@ -1,0 +1,57 @@
+Projet d’Application de Suivi de Films et Séries
+M1 Informatique 2024-2025 : Ali EDDBALI <ali.eddbali@univ-orleans.fr>
+Description : Cette application permet aux utilisateurs de rechercher, enregistrer et suivre leurs films et séries préférés. Elle se connecte à une API de base de données de films, comme l’API The Movie Database (TMDb), pour accéder à des informations en temps réel sur les films et séries (titre, synopsis, casting, évaluation, etc.).
+
+Fonctionnalités
+Recherche de Films et Séries :
+
+L’utilisateur peut rechercher des films ou des séries en saisissant un titre ou des mots-clés.
+
+L’application affiche une liste de résultats contenant des informations de base comme le titre, la date de sortie et l’affiche.
+
+Détails du Film/Série :
+
+En sélectionnant un film ou une série dans les résultats de recherche, l’utilisateur accède à une page de détails, avec des informations comme le synopsis, les acteurs principaux, les critiques, les recommandations similaires, et le genre.
+
+Des pages supplémentaires seront nécessaires pour afficher des informations détaillées sur les acteurs/réalisateurs/producteurs par exemple.
+
+Favoris :
+
+L’utilisateur peut ajouter un film ou une série à ses favoris pour le retrouver facilement plus tard.
+
+En plus des notes portées par un film ou une série, l’utilisateur peut donner sa propre note et évaluation à ses films et séries favoris.
+
+Suggestions Personnalisées :
+
+L’application doit pouvoir recommander des films/séries qui sont similaires aux favoris de l’utilisateur.
+
+Suivi des Épisodes :
+
+Pour les séries, l’utilisateur peut marquer des épisodes comme "vus" pour suivre sa progression.
+
+Modalité de réalisation et de rendu
+Le projet est à faire par groupes de deux. Le travail seul est autorisé (à la marge) après accord sur justification auprès de l’enseignant.
+
+Un dépôt est à votre disposition pour y déposer les Zip de votre projet (nommez le Zip en y intégrant vos Noms). Un seul dépôt par groupe. Le dépôt se fait au plus tard le mardi 10/12 avant minuit (le dépôt ferme à cette heure précise).
+
+Contenu du Zip
+Tout le projet, sans le build (avec un code commenté)
+
+Pensez à ne garder que le nécessaire car le Zip doit faire moins de 50 Mo.
+
+Un README qui annonce les API utilisées et quelques spécificités de votre projet si vous estimez avoir fait quelque chose d’original sur un point particulier. Le README devra annoncer également les limitations de votre projet par rapport à l’énoncé.
+
+Soutenance
+Elle aura lieu le mercredi 11 décembre 2024 (salle de réunion SR3 au RDC du LIFO) et se fera ainsi :
+
+Pas besoin de slides pour votre présentation.
+
+Vous commencez par une démo par laquelle vous montrez ce que fait votre application en mettant en exergue les choses qui vous paraissent intéressantes, ainsi que les limitations par rapport à l’énoncé.
+
+Vous ouvrez ensuite le code et je vous questionne dessus. Les 2 membres du groupe doivent pouvoir répondre sur tout, y compris les bout de code téléchargés !
+
+La soutenance étant sur un temps très court (20 minutes questions comprises), il faut la préparer avec, si besoin, des jeux de données déjà saisis dedans.
+
+La précision de la soutenance entre dans l’évaluation !
+
+Si un des membres ne répond pas aux questions comme il devrait, une différenciation dans la notation pourrait être pratiquée.

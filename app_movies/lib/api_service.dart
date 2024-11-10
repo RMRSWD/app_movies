@@ -51,7 +51,7 @@ Future<List<Film>> fetchFilms(String query) async {
     throw Exception('Échec du chargement des données de film pour $query');
   }
 }
-
+ 
 // Fonction pour obtenir les crédits d'un film spécifique
 Future<List<String>> fetchCredits(String movieId) async {
   final url = 'https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$apiKey';

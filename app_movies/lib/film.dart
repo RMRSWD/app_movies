@@ -9,9 +9,9 @@ class Film {
   final List<String> genres;
   List<String> actors;
   bool isFavorite;
-  double? userRating; // Note personnelle de l'utilisateur (non-final)
-  final String mediaType; // "movie" ou "tv"
-  List<int> watchedEpisodes; // Liste d'identifiants d'épisodes vus
+  double? userRating; 
+  final String mediaType; 
+  List<int> watchedEpisodes;
 
   Film({
     required this.id,
@@ -44,7 +44,7 @@ class Film {
               ?.map((actor) => actor['name'] as String)
               .take(5)
               .toList() ??
-          [], // Limite à 5 acteurs principaux
+          [], 
       mediaType: json['media_type'] ?? 'movie',
     );
   }

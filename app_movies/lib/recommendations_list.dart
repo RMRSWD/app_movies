@@ -27,7 +27,7 @@ class RecommendationsList extends StatelessWidget {
             return ListTile(
               leading: recommendedFilm.posterPath.isNotEmpty
                   ? Image.network('https://image.tmdb.org/t/p/w200${recommendedFilm.posterPath}')
-                  : Lottie.asset('assets/animations/no_image.json', width: 50, height: 50),
+                  : Lottie.asset('assets/images/no_movie.json', width: 50, height: 50),
               title: Text(recommendedFilm.title),
               subtitle: Text('Évaluation : ${recommendedFilm.rating}/10'),
               onTap: () {

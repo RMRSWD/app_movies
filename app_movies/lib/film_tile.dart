@@ -21,7 +21,7 @@ class FilmTile extends StatelessWidget {
     return ListTile(
       leading: film.posterPath.isNotEmpty
           ? Image.network('https://image.tmdb.org/t/p/w200${film.posterPath}')
-          : Lottie.asset('assets/animations/no_image.json', width: 50, height: 50),
+          : Lottie.asset('assets/images/no_movie.json', width: 50, height: 50),
       title: Text(film.title),
       subtitle: Text('Date de sortie : ${film.releaseDate}\nÉvaluation : ${film.rating}/10'),
       onTap: onTap,

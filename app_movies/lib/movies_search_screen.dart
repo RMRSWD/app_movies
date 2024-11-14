@@ -3,6 +3,7 @@ import 'film.dart';
 import 'film_tile.dart';
 import 'api_service.dart';
 import 'film_detail_screen.dart';
+import 'viewed_and_favorites_screen.dart';
 
 class MoviesSearchScreen extends StatefulWidget {
   const MoviesSearchScreen({super.key});
@@ -16,6 +17,7 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen> {
   String searchQuery = '';
   final TextEditingController _controller = TextEditingController();
   List<Film> favorites = [];
+  List<Film> recentlyViewed = [];
 
   @override
   void initState() {
@@ -41,11 +43,39 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen> {
     });
   }
 
+  void _addToRecentlyViewed(Film film){
+    setState(() {
+      if(!recentlyViewed. contains(film)){
+        recentlyViewed.insert(0, film);
+        if(recentlyViewed.length > 10){
+          recentlyViewed.removeLast();
+        }
+      }
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rechercher des Films et Séries'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewedAndFavoritesScreen(
+                    favorites: favorites,
+                    recentlyViewed: recentlyViewed,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -80,7 +110,7 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Erreur: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('Aucun résultat trouvé'));
+                    return const Center(child: Text('Tapez sur la barre en haut pour trouver les films'));
                   }
 
                   return ListView.builder(

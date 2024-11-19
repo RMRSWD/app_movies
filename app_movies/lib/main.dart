@@ -1,17 +1,23 @@
+import 'package:app_movies/view/movies_search_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:app_movies/movies_search_screen.dart';
-
-void main() {
-  runApp(const MyApp());
+import './provider/movie_provider.dart';
+void main(){
+  runApp(
+      ChangeNotifierProvider(
+        create: (_) => MovieProvider(),
+        child: const MyApp(),
+        ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget{
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return MaterialApp(
-      title: 'Application Films',
+      title: 'Movie Application',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

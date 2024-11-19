@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'film.dart';
+import '../modele/movie.dart';
 import 'package:lottie/lottie.dart';
 
-class FilmTile extends StatelessWidget {
-  final Film film;
+class MovieTile extends StatelessWidget {
+  final Movie film;
   final bool isFavorite;
   final VoidCallback onTap;
   final VoidCallback onFavoriteToggle;
 
-  const FilmTile({
+  const MovieTile({
     required this.film,
     required this.isFavorite,
     required this.onTap,

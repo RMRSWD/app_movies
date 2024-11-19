@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'film.dart';
+import '../modele/movie.dart';
 import 'user_rating_input.dart';
 import 'recommendations_list.dart';
 
 class FilmDetailsScreen extends StatelessWidget {
-  final Film film;
+  final Movie film;
 
   const FilmDetailsScreen({super.key, required this.film});
 

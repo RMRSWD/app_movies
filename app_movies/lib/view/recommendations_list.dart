@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'film.dart';
+import '../modele/movie.dart';
 import 'film_detail_screen.dart';
-import 'api_service.dart';
+import '../api_service/api_service.dart';
 import 'package:lottie/lottie.dart';
 
 class RecommendationsList extends StatelessWidget {
@@ -11,7 +11,7 @@ class RecommendationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Film>>(
+    return FutureBuilder<List<Movie>>(
       future: fetchRecommendations(filmId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

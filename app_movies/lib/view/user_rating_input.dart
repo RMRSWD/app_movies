@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'film.dart';
+import '../modele/movie.dart';
 
 class UserRatingInput extends StatefulWidget {
-  final Film film;
+  final Movie film;
 
   const UserRatingInput({super.key, required this.film});
 

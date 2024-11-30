@@ -19,7 +19,7 @@ class RecommendationsList extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Erreur: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text('Aucune recommandation trouvée');
+          return const Text('No recommendations found');
         }
 
         return Column(
@@ -29,12 +29,12 @@ class RecommendationsList extends StatelessWidget {
                   ? Image.network('https://image.tmdb.org/t/p/w200${recommendedFilm.posterPath}')
                   : Lottie.asset('assets/images/no_movie.json', width: 50, height: 50),
               title: Text(recommendedFilm.title),
-              subtitle: Text('Évaluation : ${recommendedFilm.rating}/10'),
+              subtitle: Text('Evaluation : ${recommendedFilm.rating}/10'),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FilmDetailsScreen(film: recommendedFilm),
+                    builder: (context) => FilmDetailsScreen(movie: recommendedFilm),
                   ),
                 );
               },

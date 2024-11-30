@@ -1,180 +1,148 @@
-import 'package:app_movies/api_service/api_service.dart';
-import 'package:app_movies/provider/movie_provider.dart';
 import 'package:app_movies/view/film_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:app_movies/modele/movie.dart';
-import 'package:app_movies/modele/data_movie.dart';
-import 'package:app_movies/view/viewed_and_favorites_screen.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-class MoviesSearchScreen extends StatefulWidget{
+import '../provider/movie_provider.dart';
+import '../view/film_tile.dart';
+import '../view/viewed_and_favorites_screen.dart';
+import '../modele/movie.dart';
+
+class MoviesSearchScreen extends StatefulWidget {
   const MoviesSearchScreen({super.key});
+
   @override
-  State<MoviesSearchScreen> createState() =>_MovieSearchScreen();
+  State<MoviesSearchScreen> createState() => _MoviesSearchScreenState();
 }
 
-class _MovieSearchScreen extends State<MoviesSearchScreen>{
-
-  late Future<List<Movie>> futureMovie;
+class _MoviesSearchScreenState extends State<MoviesSearchScreen>
+    with SingleTickerProviderStateMixin {
   String searchQuery = '';
-  final DataMovie db = DataMovie.instance;
   final TextEditingController controller = TextEditingController();
-  List<Movie> favorite = [];
-  List<Movie> recentViewed = [];
-
-
-  //initialiser la base de donnée
-  Future<void> _initDataBase() async {
-    final database = await db.database; 
-  }
+  late AnimationController _animationController;
+  late Future<List<Movie>> _futureMovies;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    // loadFavoris();
-    _initDataBase();
-    controller.text = searchQuery;
-    futureMovie = fetchMovies(searchQuery);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _futureMovies =
+        Provider.of<MovieProvider>(context, listen: false).fetchRecommendations();
   }
 
-   void searchMovie() {
+  void _searchMovies(String query) {
     setState(() {
-      searchQuery = controller.text;
-      futureMovie = fetchMovies(searchQuery);
+      searchQuery = query;
+      if (query.isEmpty) {
+        _futureMovies = Provider.of<MovieProvider>(context, listen: false).fetchRecommendations();
+      } else {
+        _futureMovies = Provider.of<MovieProvider>(context, listen: false).searchMovies(query);
+      }
     });
-  }
-
-
-  Future<void> loadFavorites() async {
-    final favoriteMovie = await db.getFavorite();
-    if(mounted){
-    setState(() {
-      favorite = favoriteMovie;
-    });
-    }
   }
 
   @override
-  Widget build(BuildContext context){
-    final movieProvider = Provider.of<MovieProvider>(context);
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final movieProvider = Provider.of<MovieProvider>(context, listen: true);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('PHIMMOI.NET'),
-        leading: IconButton(
-          icon: const Icon(Icons.more_vert),
-          onPressed: () async{
-             showDialog(
-            context: context,
-            builder: (context){
-              return AlertDialog(
-                title: const Text('Les actions vous pouvez faire'),
-                actionsAlignment: MainAxisAlignment.start,
-                actions: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MoviesSearchScreen(),)
-                          );
-                        }
-                        , child: const Text('Retour à l\'écran principal'),
-                      ),
-                      TextButton(
-                        onPressed: () async{
-                         loadFavorites();
-                         Navigator.push(
-                                        context, 
-                                        MaterialPageRoute(builder: (context) => ViewedAndFavoritesScreen(favorites: movieProvider.favoris, recentlyViewed: movieProvider.recentView))
-                                        );
-                        },
-                        child: const Text('Afficher les favoris'),
-                      ),
-                    ],
-                  ),
-
-
-                ],
-              );
-            }
-        );
-          }, 
+        leading: GestureDetector(
+          onTap: () {
+            _animationController.forward().then((_) => _animationController.reverse());
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ViewedAndFavoritesScreen(),
+              ),
+            );
+          },
+          child: ScaleTransition(
+            scale: Tween(begin: 1.0, end: 1.2).animate(CurvedAnimation(
+              parent: _animationController,
+              curve: Curves.easeInOut,
+            )),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.favorite, size: 28),
+            ),
           ),
+        ),
       ),
       body: Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Column(
-      children: [
-        Row(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: [
-            Expanded(
-              child: TextField(
-                controller: controller,
-                decoration: const InputDecoration(
-                  labelText: 'Search for a film or series',
-                  border: OutlineInputBorder(),
+            // Thanh tìm kiếm
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      labelText: 'Search for a movie or series',
+                      border: OutlineInputBorder(),
+                    ),
+                    onSubmitted: _searchMovies, // Xử lý tìm kiếm
+                  ),
                 ),
-                onSubmitted: (_) => searchMovie(),
-              ),
+                IconButton(
+                  onPressed: () => _searchMovies(controller.text), // Tìm kiếm khi nhấn nút
+                  icon: const Icon(Icons.search),
+                ),
+              ],
             ),
-            IconButton(
-              onPressed: searchMovie,
-              icon: const Icon(Icons.search),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: FutureBuilder<List<Movie>>(
-            future: futureMovie,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Erreur: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('Tap on the bar at the top to find movies'),
-                );
-              }
-
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final movie = snapshot.data![index];
-                  return ListTile(
-                    leading: movie.posterPath.isNotEmpty ? Image.network('https://image.tmdb.org/t/p/w200${movie.posterPath}'): Lottie.asset('assets/images/no_movie.json', width: 50, height: 50),
-                    title: Text(movie.title),
-                    subtitle: Text('Date de sortie : ${movie.releaseDate}\nÉvaluation : ${movie.rating}/10'),
-                    trailing: IconButton(
-                      icon: Icon(
-                            movieProvider.favoris.any((fav) => fav.id == movie.id)
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                          ),
-                      onPressed: () => movieProvider.toggleFavoris(movie),
+            const SizedBox(height: 20),
+            // Danh sách phim
+            Expanded(
+              child: FutureBuilder<List<Movie>>(
+                future: _futureMovies,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No movies found.'));
+                  }
+                  final movies = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: movies.length,
+                    itemBuilder: (context, index) {
+                      final movie = movies[index];
+                      return MovieTile(
+                        movie: movie,
+                        isFavorite: movie.isFavorite,
+                        onTap: () {
+                          movieProvider.addToRecent(movie); // Thêm vào Recently Viewed
+                          Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FilmDetailsScreen(movie: movie),
                         ),
-                    onTap: (){
-                      Navigator.push(context, 
-                                     MaterialPageRoute(builder: (context) => FilmDetailsScreen(film : movie))
-                                      );
+                      );
+                        },
+                        onFavoriteToggle: () {
+                          movieProvider.addToNewFavorite(movie);
+                          movieProvider.toggleFavorite(movie); // Thêm/Xóa khỏi Favorites
+                        },
+                      );
                     },
                   );
                 },
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  ),
-
+      ),
     );
-
   }
-
 }

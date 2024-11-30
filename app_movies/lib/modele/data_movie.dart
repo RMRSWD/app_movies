@@ -7,22 +7,18 @@ class DataMovie {
   static Database? _database;
 
   DataMovie.init();
-
-  Future<Database> get database async{
-    if(_database != null){
-      return _database! ;
-    }
-    else{
-      _database = await initData('film.db');
-      return _database!;
-    }
+ // Getter pour la base de données
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await initData('movie.db');
+    return _database!;
   }
+
 
   Future<Database> initData(String fileName) async{
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, fileName);
-
-    return await openDatabase(path, version: 1, onCreate: createDataBase);
+    return await openDatabase(path, version: 1, onCreate: createDataBase );
   }
   Future<void> createDataBase(Database db, int version) async{
     await db.execute(
@@ -40,7 +36,7 @@ class DataMovie {
         userRating REAL,
         mediaType TEXT,
         watchedEpisodes TEXT
-      '''
+      )'''
     );
   }
 
@@ -57,7 +53,6 @@ class DataMovie {
 
   Future<List<Movie>> getRecentsFilms() async {
   final db = await database;
-
   // Effectuer une requête pour récupérer les films récemment vus
   final List<Map<String, dynamic>> maps = await db.query(
     'movie', 
@@ -69,8 +64,6 @@ class DataMovie {
     return Movie.fromMap(maps[i]);
   });
 }
-
-
     Future<void> updateMovie(Movie movie) async {
     final db = await instance.database;
     await db.update(
@@ -80,7 +73,7 @@ class DataMovie {
       whereArgs: [movie.id],
     );
   }
-
+  
   Future<void> deleteMovie(int id) async{
     final db = await instance.database;
     await db.delete('movie', where: 'id = ?', whereArgs: [id]);

@@ -6,34 +6,26 @@ import 'package:app_movies/api_service/api_service.dart';
 class MovieProvider extends ChangeNotifier {
   final DataMovie db = DataMovie.instance;
 
- /*   // ignore: prefer_final_fields
-  List<Movie> _favorites = [];
-  // ignore: prefer_final_fields
-  List<Movie> _recents = [];
-
-  List<Movie> get favorites => _favorites;
-  List<Movie> get recents => _recents; 
-  
- Future<void> fetchFavorites() async { 
-      _favorites = await db.getFavorite();
-      notifyListeners(); 
-   
-  }
-
-  Future<void> fetchRecents() async {
-    _recents =  await db.getRecentsFilms(); // Fetch directly from the database
-    notifyListeners();
-  } */
-
-  Future<List<Movie>> fetchFavorites() async {
+  /* Future<List<Movie>> fetchFavorites() async {
     final db = DataMovie.instance;
     notifyListeners();
     return await db.getFavorite(); // Récupérer les favoris depuis la base
+  } */
+
+  Future<List<Movie>> fetchFavorites() async {
+  try {
+    final db = DataMovie.instance;
+    return await db.getFavorite(); // Récupérer les favoris depuis la base
+  } catch (e) {
+    debugPrint('Erreur lors du chargement des favoris: $e');
+    return []; // Retourne une liste vide en cas d'erreur
   }
+}
+
 
     Future<List<Movie>> fetchRecents() async {
     final db = DataMovie.instance;
-        notifyListeners();
+    //notifyListeners();
     return await db.getRecentsFilms();
      // Récupérer les récents depuis la base
   }
@@ -45,6 +37,7 @@ class MovieProvider extends ChangeNotifier {
     }
     return await fetchMovies(query); // Call the API to fetch results
   }
+
 
   Future<void> toggleFavorite(Movie movie) async {
   try {
@@ -68,7 +61,7 @@ class MovieProvider extends ChangeNotifier {
 
    Future<List<Movie>> fetchRecommendations() async {
     notifyListeners();
-    return await fetchMovies("popular");
+    return await fetchMovies("hot");
   }
 
   Future<void> deleteMovie(Movie movie) async{
@@ -77,14 +70,9 @@ class MovieProvider extends ChangeNotifier {
     notifyListeners();
   }
 
- /*     Future<List<Movie>> fetchActorDetails(int actorId) async {
-    notifyListeners();
-    return await fetchActorDetailsMovie(actorId); // Appel de l'API
-  } */
   // Méthode pour récupérer les détails d'un acteur
   Future<Map<String, dynamic>> fetchActorDetails(int actorId) async {
   try {
-    // Assurez-vous que cette méthode retourne bien un Map<String, dynamic>
     final details = await fetchActorDetailsMovie(actorId);
     return details;
   } catch (e) {
@@ -92,31 +80,14 @@ class MovieProvider extends ChangeNotifier {
     throw Exception('Erreur lors de la récupération des détails de l\'acteur.');
   }
 }
-  /* Future<List<Movie>> fetchActorDetails(int actorId) async {
-    try {
-      final actorMovies = await fetchActorDetailsMovie(actorId); // Appel de l'API pour obtenir les films d'un acteur
-      notifyListeners(); // Notifier après la mise à jour des données
-      return actorMovies;
-    } catch (e) {
-      debugPrint('Erreur lors de la récupération des détails de l\'acteur : $e');
-      return []; // Retourner une liste vide en cas d'erreur
-    }
-  }
- */
-/*    Future <List<Movie>> fetchActorMovies(int actorId, bool isLoading) async {
-      isLoading = false;
-      notifyListeners();
-      return fetchActorMoviesWithDetail(actorId); // Appel de l'API
-  } */
  // Méthode pour récupérer les films d'un acteur
   Future<List<Movie>> fetchActorMovies(int actorId) async {
     try {
-      final actorMovies = await fetchActorMoviesWithDetail(actorId); // Appel de l'API pour obtenir les films d'un acteur
-      notifyListeners(); // Notifier après la mise à jour des données
+      final actorMovies = await fetchActorMoviesWithDetail(actorId); 
       return actorMovies;
     } catch (e) {
       debugPrint('Erreur lors de la récupération des films de l\'acteur : $e');
-      return []; // Retourner une liste vide en cas d'erreur
+      return [];
     }
   }
 
@@ -130,6 +101,37 @@ class MovieProvider extends ChangeNotifier {
   } catch (e) {
     print("Erreur lors de la récupération des détails du film: $e");
     throw Exception("Erreur: Impossible de récupérer les détails du film.");
+  }
+}
+
+
+Future<void> saveNote(String noteUser, Movie movie) async {
+  try{
+    final note = double.tryParse(noteUser);
+    if (note != null && note >= 0 && note <= 10) {
+        movie.userRating = note; // Mettre à jour l'objet local
+      await db.updateMovie(movie);
+  }
+  }
+  catch(e){
+     throw Exception("Erreur: Impossible de sauvegarder la note $e");
+
+  }
+
+  }
+
+  Future<void> saveNoteToMovie(double note, Movie movie) async {
+  try {
+    if (note >= 0 && note <= 10) {
+      movie.userRating = note; 
+      await db.updateMovie(movie); 
+      notifyListeners();
+    } else {
+      throw Exception("Note invalide : elle doit être un nombre entre 0 et 10.");
+    }
+  } catch (e) {
+    debugPrint("Erreur: Impossible de sauvegarder la note $e");
+    throw Exception("Erreur: Impossible de sauvegarder la note $e");
   }
 }
 

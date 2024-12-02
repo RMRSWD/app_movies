@@ -17,34 +17,34 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
     with SingleTickerProviderStateMixin {
   String searchQuery = '';
   final TextEditingController controller = TextEditingController();
-  late AnimationController _animationController;
-  late Future<List<Movie>> _futureMovies;
+  late AnimationController animationController;
+  late Future<List<Movie>> futureMovies;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
+    animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _futureMovies =
-        Provider.of<MovieProvider>(context, listen: false).fetchRecommendations();
+    futureMovies =
+    Provider.of<MovieProvider>(context, listen: false).fetchRecommendations();
   }
 
   void _searchMovies(String query) {
     setState(() {
       searchQuery = query;
       if (query.isEmpty) {
-        _futureMovies = Provider.of<MovieProvider>(context, listen: false).fetchRecommendations();
+        futureMovies = Provider.of<MovieProvider>(context, listen: false).fetchRecommendations();
       } else {
-        _futureMovies = Provider.of<MovieProvider>(context, listen: false).searchMovies(query);
+        futureMovies = Provider.of<MovieProvider>(context, listen: false).searchMovies(query);
       }
     });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    animationController.dispose();
     super.dispose();
   }
 
@@ -54,10 +54,10 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PHIMMOI.NET'),
+        title: const Text('APP FILM'),
         leading: GestureDetector(
           onTap: () {
-            _animationController.forward().then((_) => _animationController.reverse());
+            animationController.forward().then((_) => animationController.reverse());
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -67,7 +67,7 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
           },
           child: ScaleTransition(
             scale: Tween(begin: 1.0, end: 1.2).animate(CurvedAnimation(
-              parent: _animationController,
+              parent: animationController,
               curve: Curves.easeInOut,
             )),
             child: const Padding(
@@ -91,11 +91,11 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
                       labelText: 'Search for a movie or series',
                       border: OutlineInputBorder(),
                     ),
-                    onSubmitted: _searchMovies, // Xử lý tìm kiếm
+                    onSubmitted: _searchMovies, 
                   ),
                 ),
                 IconButton(
-                  onPressed: () => _searchMovies(controller.text), // Tìm kiếm khi nhấn nút
+                  onPressed: () => _searchMovies(controller.text),
                   icon: const Icon(Icons.search),
                 ),
               ],
@@ -104,7 +104,7 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
             // Danh sách phim
             Expanded(
               child: FutureBuilder<List<Movie>>(
-                future: _futureMovies,
+                future: futureMovies,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -120,9 +120,8 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
                       final movie = movies[index];
                       return MovieTile(
                         movie: movie,
-                        isFavorite: movie.isFavorite,
                         onTap: () {
-                          movieProvider.addToRecent(movie); // Thêm vào Recently Viewed
+                          movieProvider.addToRecent(movie); 
                           Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -130,10 +129,10 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
                         ),
                       );
                         },
-                        onFavoriteToggle: () {
+                        /* onFavoriteToggle: () {
                           movieProvider.addToNewFavorite(movie);
                           movieProvider.toggleFavorite(movie); // Thêm/Xóa khỏi Favorites
-                        },
+                        }, */
                       );
                     },
                   );
@@ -146,3 +145,5 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
     );
   }
 }
+
+

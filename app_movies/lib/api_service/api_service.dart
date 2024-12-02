@@ -22,6 +22,7 @@ Future<List<Movie>> fetchMovies(String query) async {
       // Récupération des crédits et genres pour chaque films
       film.actors = await fetchCredits(film.id);
       film.genres = await fetchGenre(film.id);
+
       films.add(film);
     }
     return films;
@@ -105,19 +106,6 @@ Future<List<String>> fetchGenre(String filmId) async {
   }
 }
 
-/* Future<List<Movie>> fetchActorDetailsMovie(int personId) async {
-  final url = 'https://api.themoviedb.org/3/person/$personId?api_key=$apiKey';
-
-  final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200){
-      final Map<String, dynamic> jsonData = json.decode(response.body);
-      final List<dynamic> results = jsonData['results'];
-      return results.map((item) => Movie.fromJson(item)).toList();
-    }
-   else {
-    throw Exception('Échec du chargement des détails de l\'acteur ID $personId');
-  }
-} */
 
 // Méthode pour récupérer les films d'un acteur
 Future<List<Movie>> fetchActorMoviesWithDetail(int personId) async {

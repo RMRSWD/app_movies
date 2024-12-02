@@ -117,7 +117,7 @@ class FilmDetailsScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // User rating input
-            UserRatingInput(film: movie),
+            UserRatingInput(movie:movie),
             const SizedBox(height: 20),
 
             // Recommendations

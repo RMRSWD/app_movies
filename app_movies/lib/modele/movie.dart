@@ -12,6 +12,7 @@ class Movie {
   double? userRating; 
   final String mediaType; 
   List<int> watchedEpisodes;
+  bool isClicked;
 
   Movie({
     required this.id,
@@ -26,6 +27,7 @@ class Movie {
     this.userRating,
     required this.mediaType,
     this.watchedEpisodes = const [],
+    this.isClicked = false
   });
 //
   factory Movie.fromJson(Map<String, dynamic> json) {

@@ -79,4 +79,20 @@ class DataMovie {
     await db.delete('movie', where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<bool> isFavorite(String movieId) async {
+    final db = await instance.database;
+    final result = await db.query(
+      'movies',
+      where: 'id = ?',
+      whereArgs: [movieId],
+    );
+    return result.isNotEmpty;
+  }
+
+  Future<List<String>> getFavoriteIds() async {
+  final db = await instance.database;
+  final result = await db.query('movies', columns: ['id'], where: 'isFavorite = ?', whereArgs: [1]);
+  return result.map((row) => row['id'].toString()).toList();
+}
+
 }

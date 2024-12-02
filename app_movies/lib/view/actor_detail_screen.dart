@@ -59,13 +59,13 @@ class ActorDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        actorDetails['biography'] ?? 'Aucune biographie disponible.',
+                        actorDetails['biography'] ?? 'No biography available..',
                         style: const TextStyle(fontSize: 16),
                       ),
                     ],
                   );
                 } else {
-                  return const Text('Aucun détail disponible.');
+                  return const Text('No detail available.');
                 }
               },
             ),

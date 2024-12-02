@@ -90,7 +90,7 @@ class Movie {
     watchedEpisodes: map['watchedEpisodes'] != null
         ? (map['watchedEpisodes'] as String)
             .split(',')
-            .map((e) => int.tryParse(e) ?? 0) // Xử lý lỗi nếu không phải số
+            .map((e) => int.tryParse(e) ?? 0)
             .toList()
         : [],
   );

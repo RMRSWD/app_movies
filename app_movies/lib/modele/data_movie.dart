@@ -53,11 +53,11 @@ class DataMovie {
 
   Future<List<Movie>> getRecentsFilms() async {
   final db = await database;
-  // Effectuer une requête pour récupérer les films récemment vus
+  // la requête pour récupérer les films récemment vus
   final List<Map<String, dynamic>> maps = await db.query(
     'movie', 
-    orderBy: 'id DESC', // Trier par ordre décroissant (modifiez si vous avez une autre colonne pour l'ordre)
-    limit: 10, // Limiter à 10 films récemment vus
+    orderBy: 'id DESC', 
+    limit: 10,
   );
   // Convertir chaque Map en un objet Film
   return List.generate(maps.length, (i) {
@@ -79,7 +79,7 @@ class DataMovie {
     await db.delete('movie', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<bool> isFavorite(String movieId) async {
+ /*  Future<bool> isFavorite(String movieId) async {
     final db = await instance.database;
     final result = await db.query(
       'movies',
@@ -93,6 +93,6 @@ class DataMovie {
   final db = await instance.database;
   final result = await db.query('movies', columns: ['id'], where: 'isFavorite = ?', whereArgs: [1]);
   return result.map((row) => row['id'].toString()).toList();
-}
+} */
 
 }

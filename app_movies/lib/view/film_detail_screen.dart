@@ -125,7 +125,7 @@ class FilmDetailsScreen extends StatelessWidget {
               'Recommandations similaires :',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            RecommendationsList(filmId: movie.id),
+            RecommendationsList(movieId: movie.id),
           ],
         ),
       ),

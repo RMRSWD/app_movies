@@ -27,7 +27,7 @@ Future<List<Movie>> fetchMovies(String query) async {
     }
     return films;
   } else {
-    throw Exception('Échec du chargement des données de film pour $query');
+    throw Exception('Failed to load film data for $query');
   }
 }
 
@@ -53,10 +53,9 @@ Future<List<String>> fetchCredits(String movieId) async {
     final Map<String, dynamic> jsonData = json.decode(response.body);
     final List<dynamic> castList = jsonData['cast'] ?? [];
 
-    // Retourne une liste avec les noms des acteurs principaux (jusqu'à 5 acteurs)
     return castList.take(5).map((actor) => actor['name'] as String).toList();
   } else {
-    throw Exception('Échec du chargement des crédits pour le film $movieId');
+    throw Exception('Failed to load film credits  $movieId');
   }
 }
 //Fonction retourne une liste film recommendé
@@ -68,11 +67,10 @@ Future<List<Movie>> fetchRecommendations(String movieId) async {
   if (response.statusCode == 200) {
     final Map<String, dynamic> jsonData = json.decode(response.body);
     final List<dynamic> results = jsonData['results'];
-
     // Transforme chaque élément de `results` en un objet `Film` et retourne la liste
     return results.map((item) => Movie.fromJson(item)).toList();
   } else {
-    throw Exception('Échec du chargement des recommandations pour le film $movieId');
+    throw Exception('Failed to load film recommendations $movieId');
   }
 }
 
@@ -90,7 +88,7 @@ Future<List<String>> fetchGenre(String filmId) async {
     // Récupère les noms des genres
     return genres.map((genre) => genre['name'] as String).toList();
   } else {
-    throw Exception('Échec du chargement des genres pour le film ID $filmId');
+    throw Exception('Failed to load genres for movie ID $filmId');
   }
 }
 
@@ -102,14 +100,13 @@ Future<List<String>> fetchGenre(String filmId) async {
   if (response.statusCode == 200) {
     return json.decode(response.body); // Retourne un Map contenant les détails de l'acteur
   } else {
-    throw Exception('Échec du chargement des détails de l\'acteur ID $personId');
+    throw Exception('Failed to load actor ID details $personId');
   }
 }
 
 
 // Méthode pour récupérer les films d'un acteur
 Future<List<Movie>> fetchActorMoviesWithDetail(int personId) async {
-  // final url = 'https://api.themoviedb.org/discover/movie?with_cast=$personId&api_key=$apiKey';
   final url = 'https://api.themoviedb.org/3/discover/movie?with_cast=$personId&api_key=$apiKey';
 
 
@@ -121,6 +118,6 @@ Future<List<Movie>> fetchActorMoviesWithDetail(int personId) async {
 
     return results.map((item) => Movie.fromJson(item)).toList();
   } else {
-    throw Exception('Échec du chargement des films pour l\'acteur ID $personId');
+    throw Exception('Failed to load movies for actor ID $personId');
   }
 }

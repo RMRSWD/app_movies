@@ -54,7 +54,15 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('APP FILM'),
+        title: const Text('APP FILM',
+        style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Roboto',
+        letterSpacing: 2.0, 
+      ), 
+        ), 
+        centerTitle: true,
         leading: GestureDetector(
           onTap: () {
             animationController.forward().then((_) => animationController.reverse());
@@ -72,7 +80,7 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
             )),
             child: const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.favorite, size: 28),
+              child: Icon(Icons.favorite,color: Colors.red, size: 28),
             ),
           ),
         ),
@@ -101,7 +109,6 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
               ],
             ),
             const SizedBox(height: 20),
-            // Danh sách phim
             Expanded(
               child: FutureBuilder<List<Movie>>(
                 future: futureMovies,

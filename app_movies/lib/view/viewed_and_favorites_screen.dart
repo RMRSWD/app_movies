@@ -1,6 +1,7 @@
 import 'package:app_movies/provider/movie_provider.dart';
 import 'package:app_movies/view/film_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../modele/movie.dart';
 
@@ -61,14 +62,12 @@ Widget build(BuildContext context) {
 }
 
 Widget _buildMovieList(List<Movie> movies, BuildContext context, MovieProvider movieProvider){
-    // final movieProvider = Provider.of<MovieProvider>(listen: true);
-
   return ListView.builder(
     itemCount: movies.length,
     itemBuilder: (context, index) {
       final movie = movies[index];
       return ListTile(
-        leading: movie.posterPath.isNotEmpty ? Image.network('https://image.tmdb.org/t/p/w200${movie.posterPath}') : const Icon(Icons.movie),
+        leading: movie.posterPath.isNotEmpty ? Image.network('https://image.tmdb.org/t/p/w200${movie.posterPath}') : Lottie.asset('assets/images/no_movie.json', width: 50, height: 50),
         title: Text(movie.title),
         subtitle: Text('Release date : ${movie.releaseDate}'),
         onTap: (){

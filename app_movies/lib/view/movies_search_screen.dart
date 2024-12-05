@@ -136,10 +136,6 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
                         ),
                       );
                         },
-                        /* onFavoriteToggle: () {
-                          movieProvider.addToNewFavorite(movie);
-                          movieProvider.toggleFavorite(movie); // Thêm/Xóa khỏi Favorites
-                        }, */
                       );
                     },
                   );

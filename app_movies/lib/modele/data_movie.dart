@@ -53,7 +53,6 @@ class DataMovie {
 
   Future<List<Movie>> getRecentsFilms() async {
   final db = await database;
-  // la requête pour récupérer les films récemment vus
   final List<Map<String, dynamic>> maps = await db.query(
     'movie', 
     orderBy: 'id DESC', 
@@ -78,21 +77,5 @@ class DataMovie {
     final db = await instance.database;
     await db.delete('movie', where: 'id = ?', whereArgs: [id]);
   }
-
- /*  Future<bool> isFavorite(String movieId) async {
-    final db = await instance.database;
-    final result = await db.query(
-      'movies',
-      where: 'id = ?',
-      whereArgs: [movieId],
-    );
-    return result.isNotEmpty;
-  }
-
-  Future<List<String>> getFavoriteIds() async {
-  final db = await instance.database;
-  final result = await db.query('movies', columns: ['id'], where: 'isFavorite = ?', whereArgs: [1]);
-  return result.map((row) => row['id'].toString()).toList();
-} */
 
 }

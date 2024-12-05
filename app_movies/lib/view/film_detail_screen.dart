@@ -111,7 +111,7 @@ class FilmDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Évaluation : ${movie.rating}/10',
+              'Evaluation : ${movie.rating}/10',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 20),
@@ -122,7 +122,7 @@ class FilmDetailsScreen extends StatelessWidget {
 
             // Recommendations
             Text(
-              'Recommandations similaires :',
+              'Recommandations:',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             RecommendationsList(movieId: movie.id),

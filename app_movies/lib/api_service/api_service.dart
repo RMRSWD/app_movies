@@ -98,7 +98,7 @@ Future<List<String>> fetchGenre(String filmId) async {
 
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
-    return json.decode(response.body); // Retourne un Map contenant les détails de l'acteur
+    return json.decode(response.body);
   } else {
     throw Exception('Failed to load actor ID details $personId');
   }

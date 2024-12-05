@@ -33,7 +33,7 @@ class Movie {
   factory Movie.fromJson(Map<String, dynamic> json) {
     return Movie(
       id: json['id'].toString(),
-      title: json['title'] ?? json['name'] ?? 'Unknown', // Prend en compte les films et séries
+      title: json['title'] ?? json['name'] ?? 'Unknown',
       releaseDate: json['release_date'] ?? json['first_air_date'] ?? 'Unknown',
       overview: json['overview'] ?? 'No overview available',
       rating: (json['vote_average'] ?? 0.0).toDouble(),
@@ -59,9 +59,9 @@ class Movie {
       'overview': overview,
       'rating': rating,
       'posterPath': posterPath,
-      'genres': genres.join(','), // Les genres comme une chaîne séparée par des virgules
-      'actors': actors.join(','), // Les acteurs comme une chaîne séparée par des virgules
-      'isFavorite': isFavorite ? 1 : 0, // Pour SQLite, boolean -> 1 ou 0
+      'genres': genres.join(','),
+      'actors': actors.join(','),
+      'isFavorite': isFavorite ? 1 : 0,
       'userRating': userRating,
       'mediaType': mediaType,
       'watchedEpisodes': watchedEpisodes.isNotEmpty ? watchedEpisodes.join(',') : '', 

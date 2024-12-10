@@ -27,26 +27,29 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    futureMovies =
-    Provider.of<MovieProvider>(context, listen: false).fetchRecommendations();
+    futureMovies = Provider.of<MovieProvider>(context, listen: false)
+        .fetchRecommendations();
   }
 
   void _searchMovies(String query) {
     setState(() {
       searchQuery = query;
       if (query.isEmpty) {
-        futureMovies = Provider.of<MovieProvider>(context, listen: false).fetchRecommendations();
+        futureMovies = Provider.of<MovieProvider>(context, listen: false)
+            .fetchRecommendations();
       } else {
-        futureMovies = Provider.of<MovieProvider>(context, listen: false).searchMovies(query);
+        futureMovies = Provider.of<MovieProvider>(context, listen: false)
+            .searchMovies(query);
       }
     });
   }
-
   @override
   void dispose() {
     animationController.dispose();
     super.dispose();
   }
+
+  bool isHovered = false; // Variable d'état pour gérer le survol
 
   @override
   Widget build(BuildContext context) {
@@ -54,33 +57,59 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('APP FILM',
-        style: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'Roboto',
-        letterSpacing: 2.0, 
-      ), 
-        ), 
+        title: const Text(
+          'App Film',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Roboto',
+            letterSpacing: 2.0,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Rafraîchir',
+            onPressed: () {
+              setState(() {
+                controller.clear(); // Supprimer le contenu de la recherche
+                searchQuery = ''; // Réinitialiser la requête
+                futureMovies = movieProvider.fetchRecommendations();
+              });
+            },
+          ),
+        ],
         centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            animationController.forward().then((_) => animationController.reverse());
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ViewedAndFavoritesScreen(),
-              ),
-            );
+        leading: MouseRegion(
+          onEnter: (_) {
+            setState(() {
+              isHovered = true;
+            });
           },
-          child: ScaleTransition(
-            scale: Tween(begin: 1.0, end: 1.2).animate(CurvedAnimation(
-              parent: animationController,
-              curve: Curves.easeInOut,
-            )),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.favorite,color: Colors.red, size: 28),
+          onExit: (_) {
+            setState(() {
+              isHovered = false;
+            });
+          },
+          child: AnimatedScale(
+            scale: isHovered ? 1.4 : 1.0,
+            duration: const Duration(milliseconds: 200),
+            child: GestureDetector(
+              onTap: () {
+                animationController
+                    .forward()
+                    .then((_) => animationController.reverse());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ViewedAndFavoritesScreen(),
+                  ),
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.favorite, color: Colors.red, size: 28),
+              ),
             ),
           ),
         ),
@@ -89,17 +118,17 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            // Thanh tìm kiếm
+            // Barre de recherche
             Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: controller,
                     decoration: const InputDecoration(
-                      labelText: 'Search for a movie or series',
+                      labelText: 'Recherchez un film ou une série',
                       border: OutlineInputBorder(),
                     ),
-                    onSubmitted: _searchMovies, 
+                    onSubmitted: _searchMovies,
                   ),
                 ),
                 IconButton(
@@ -116,9 +145,9 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                    return Center(child: Text('Erreur : ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No movies found.'));
+                    return const Center(child: Text('Aucun film trouvé.'));
                   }
                   final movies = snapshot.data!;
                   return ListView.builder(
@@ -128,13 +157,14 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
                       return MovieTile(
                         movie: movie,
                         onTap: () {
-                          movieProvider.addToRecent(movie); 
+                          movieProvider.addToRecent(movie);
                           Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FilmDetailsScreen(movie: movie),
-                        ),
-                      );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  FilmDetailsScreen(movie: movie),
+                            ),
+                          );
                         },
                       );
                     },
@@ -148,5 +178,3 @@ class _MoviesSearchScreenState extends State<MoviesSearchScreen>
     );
   }
 }
-
-

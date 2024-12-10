@@ -5,23 +5,24 @@ import 'package:provider/provider.dart';
 import '../modele/movie.dart';
 import 'user_rating_input.dart';
 import 'recommendations_list.dart';
+import 'package:app_movies/view/home_button.dart';
 
 class FilmDetailsScreen extends StatelessWidget {
   final Movie movie;
-  
 
   const FilmDetailsScreen({super.key, required this.movie});
-  
 
   @override
   Widget build(BuildContext context) {
     final movieProvider = Provider.of<MovieProvider>(context, listen: true);
-    Future <Map<String, dynamic>> movieDetail = movieProvider.fetchMovieDetails(int.parse(movie.id));
+    Future<Map<String, dynamic>> movieDetail =
+        movieProvider.fetchMovieDetails(int.parse(movie.id));
 
     return Scaffold(
       appBar: AppBar(
         title: Text(movie.title),
         actions: [
+          HomeButton(currentContext: context),
           IconButton(
             icon: Icon(
               movie.isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -57,15 +58,13 @@ class FilmDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Genres : ${movie.genres.isNotEmpty ? movie.genres.join(', ') : 'No genre disponible'}',
+              'Genres : ${movie.genres.isNotEmpty ? movie.genres.join(', ') : 'Pas de genre disponible'}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 10),
             Text(
-              // 'Casting : ${movie.actors.join(', ')}',
               'Casting :',
               style: Theme.of(context).textTheme.bodyMedium,
-              
             ),
             const SizedBox(height: 5),
             FutureBuilder<Map<String, dynamic>>(
@@ -74,7 +73,7 @@ class FilmDetailsScreen extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
+                  return Text('Erreur : ${snapshot.error}');
                 } else if (snapshot.hasData) {
                   final movieDetail = snapshot.data?['credits']['cast'] ?? [];
                   return Column(
@@ -102,27 +101,26 @@ class FilmDetailsScreen extends StatelessWidget {
                               ),
                             );
                           }).toList()
-                        : [const Text('No actors listed.')],
+                        : [const Text('Aucun acteur répertorié.')],
                   );
                 } else {
-                  return const Text('No data available.');
+                  return const Text('Aucune donnée disponible.');
                 }
               },
             ),
             const SizedBox(height: 10),
             Text(
-              'Evaluation : ${movie.rating}/10',
+              'Évaluation : ${movie.rating}/10',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 20),
-
-            // User rating input
-            UserRatingInput(movie:movie),
+            // Saisie de la note utilisateur
+            UserRatingInput(movie: movie),
             const SizedBox(height: 20),
 
-            // Recommendations
+            // Recommandations
             Text(
-              'Recommandations:',
+              'Recommandations :',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             RecommendationsList(movieId: movie.id),

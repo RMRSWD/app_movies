@@ -1,8 +1,9 @@
+import 'package:app_movies/data_base_movie/data_movie_recently.dart';
 import 'package:app_movies/provider/movie_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../modele/movie.dart';
-import '../modele/data_movie.dart';
+import '../data_base_movie/data_movie.dart';
 
 class UserRatingInput extends StatefulWidget {
   final Movie movie;
@@ -15,12 +16,14 @@ class UserRatingInput extends StatefulWidget {
 
 class _UserRatingInputState extends State<UserRatingInput> {
   final DataMovie db = DataMovie.instance; // Instance de la base de données
+  final DataMovieRecent dbr = DataMovieRecent.instance;
   final TextEditingController _noteController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _noteController.text = widget.movie.userRating?.toString() ?? ''; // Charger la note existante
+    _noteController.text =
+        widget.movie.userRating?.toString() ?? ''; // Charger la note existante
   }
 
   @override
@@ -31,14 +34,14 @@ class _UserRatingInputState extends State<UserRatingInput> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Add or modify your personal note :',
+          'Ajoutez ou modifiez votre note personnelle :',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
         TextField(
           controller: _noteController,
           decoration: const InputDecoration(
-            labelText: 'Your rating (0-10)',
+            labelText: 'Votre note (0-10)',
             border: OutlineInputBorder(),
           ),
           keyboardType: TextInputType.number,
@@ -53,21 +56,25 @@ class _UserRatingInputState extends State<UserRatingInput> {
               if (note != null && note >= 0 && note <= 10) {
                 movieProvider.saveNoteToMovie(note, widget.movie);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Note successfully recorded !')),
+                  const SnackBar(
+                      content: Text('Note enregistrée avec succès !')),
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please enter a valid note (0-10).')),
+                  const SnackBar(
+                      content: Text(
+                          'Veuillez entrer une note valide (entre 0 et 10).')),
                 );
               }
-            } 
-            else {
+            } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Please enter a valid note (0-10).')),
+                const SnackBar(
+                    content: Text(
+                        'Veuillez entrer une note valide (entre 0 et 10).')),
               );
             }
           },
-          child: const Text('Save note'),
+          child: const Text('Enregistrer la note'),
         ),
       ],
     );

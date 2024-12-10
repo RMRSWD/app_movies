@@ -1,4 +1,3 @@
-
 class Movie {
   final String id;
   final String title;
@@ -9,28 +8,27 @@ class Movie {
   List<String> genres;
   List<String> actors;
   bool isFavorite;
-  double? userRating; 
-  final String mediaType; 
+  double? userRating;
+  final String mediaType;
   List<int> watchedEpisodes;
   bool isClicked;
 
-  Movie({
-    required this.id,
-    required this.title,
-    required this.releaseDate,
-    required this.overview,
-    required this.rating,
-    required this.posterPath,
-    this.genres = const [],
-    this.actors = const [],
-    this.isFavorite = false,
-    this.userRating,
-    required this.mediaType,
-    this.watchedEpisodes = const [],
-    this.isClicked = false
-  });
-//
-  factory Movie.fromJson(Map<String, dynamic> json) {
+  Movie(
+      {required this.id,
+      required this.title,
+      required this.releaseDate,
+      required this.overview,
+      required this.rating,
+      required this.posterPath,
+      this.genres = const [],
+      this.actors = const [],
+      this.isFavorite = false,
+      this.userRating,
+      required this.mediaType,
+      this.watchedEpisodes = const [],
+      this.isClicked = false});
+
+  factory Movie.fromJson(Map<String, dynamic> json) { //transormer API -> liste film
     return Movie(
       id: json['id'].toString(),
       title: json['title'] ?? json['name'] ?? 'Unknown',
@@ -46,12 +44,12 @@ class Movie {
               ?.map((actor) => actor['name'] as String)
               .take(5)
               .toList() ??
-          [], 
+          [],
       mediaType: json['media_type'] ?? 'movie',
     );
   }
 
-    Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() { //pour enregister les données dans la base de donnée
     return {
       'id': id,
       'title': title,
@@ -64,36 +62,36 @@ class Movie {
       'isFavorite': isFavorite ? 1 : 0,
       'userRating': userRating,
       'mediaType': mediaType,
-      'watchedEpisodes': watchedEpisodes.isNotEmpty ? watchedEpisodes.join(',') : '', 
+      'watchedEpisodes':
+          watchedEpisodes.isNotEmpty ? watchedEpisodes.join(',') : '',
     };
   }
 
- factory Movie.fromMap(Map<String, dynamic> map) {
-  return Movie(
-    id: map['id'].toString(),
-    title: map['title'] ?? '',
-    releaseDate: map['releaseDate'] ?? '',
-    overview: map['overview'] ?? '',
-    rating: map['rating'] is int
-        ? (map['rating'] as int).toDouble()
-        : (map['rating'] is String
-            ? double.tryParse(map['rating']) ?? 0.0
-            : map['rating'] as double),
-    posterPath: map['posterPath'] ?? '',
-    genres: (map['genres'] as String).split('|'),
-    actors: (map['actors'] as String).split('|'),
-    isFavorite: map['isFavorite'] == 1,
-    userRating: map['userRating'] is String
-        ? double.tryParse(map['userRating'])
-        : map['userRating'],
-    mediaType: map['mediaType'] ?? '',
-    watchedEpisodes: map['watchedEpisodes'] != null
-        ? (map['watchedEpisodes'] as String)
-            .split(',')
-            .map((e) => int.tryParse(e) ?? 0)
-            .toList()
-        : [],
-  );
-}
-
+  factory Movie.fromMap(Map<String, dynamic> map) { //pour transformer des données dans BDD en liste films
+    return Movie(
+      id: map['id'].toString(),
+      title: map['title'] ?? '',
+      releaseDate: map['releaseDate'] ?? '',
+      overview: map['overview'] ?? '',
+      rating: map['rating'] is int
+          ? (map['rating'] as int).toDouble()
+          : (map['rating'] is String
+              ? double.tryParse(map['rating']) ?? 0.0
+              : map['rating'] as double),
+      posterPath: map['posterPath'] ?? '',
+      genres: (map['genres'] as String).split('|'),
+      actors: (map['actors'] as String).split('|'),
+      isFavorite: map['isFavorite'] == 1,
+      userRating: map['userRating'] is String
+          ? double.tryParse(map['userRating'])
+          : map['userRating'],
+      mediaType: map['mediaType'] ?? '',
+      watchedEpisodes: map['watchedEpisodes'] != null
+          ? (map['watchedEpisodes'] as String)
+              .split(',')
+              .map((e) => int.tryParse(e) ?? 0)
+              .toList()
+          : [],
+    );
+  }
 }
